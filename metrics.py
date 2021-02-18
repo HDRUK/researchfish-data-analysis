@@ -1,4 +1,4 @@
-from get_award_refs_by_hdruk_group import *
+from hdruk_groups import *
 import plotly.express as px
 import plotly
 
