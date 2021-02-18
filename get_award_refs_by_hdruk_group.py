@@ -63,11 +63,23 @@ def get_national_priority_groups(workbook):
     return national_priorities_award_refs_dict
 
 
+def get_hdruk_activities_award_refs(workbook):
 
+    hdruk_activities_award_refs_dict = {'Central Infrastructure Activities': [], 'Central PPPEI Activities': [], 'Central Training Activities': []}
 
+    award_details_df = workbook['Award Details']
 
+    index = 0
+    for title in award_details_df['Title']:
+        if title == 'Health Data Research UK central infrastructure activities':
+            hdruk_activities_award_refs_dict['Central Infrastructure Activities'].append(award_details_df['Award Reference'][index])
+        elif title == 'Health Data Research UK central PPPEI activities':
+            hdruk_activities_award_refs_dict['Central PPPEI Activities'].append(award_details_df['Award Reference'][index])
+        elif title == 'Health Data Research UK central training activities':
+            hdruk_activities_award_refs_dict['Central Training Activities'].append(award_details_df['Award Reference'][index])
+        index += 1
 
-
+    return hdruk_activities_award_refs_dict
 
 
 def export_dict_as_json(dict, file_path):
@@ -78,14 +90,15 @@ def export_dict_as_json(dict, file_path):
 
 def main():
 
-    rf_2019_wb = read_workbook(PATH_TO_RESEARCHFISH_2019_DATA)    
+    rf_2019_wb = read_workbook(PATH_TO_RESEARCHFISH_2019_DATA)  
+
     community_group_award_refs_dict = get_community_group_award_refs(rf_2019_wb)
     national_priorities_award_refs_dict = get_national_priority_groups(rf_2019_wb)
+    hdruk_activities_award_refs_dict = get_hdruk_activities_award_refs(rf_2019_wb)
 
     export_dict_as_json(community_group_award_refs_dict, 'hdruk_groups/community_group_award_refs.json')
     export_dict_as_json(national_priorities_award_refs_dict, 'hdruk_groups/national_priority_group_award_refs.json')
-
-    
+    export_dict_as_json(hdruk_activities_award_refs_dict, 'hdruk_groups/hdruk_activities_award_refs.json')
 
 
 if '__main__' == __name__:
