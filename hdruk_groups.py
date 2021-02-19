@@ -82,6 +82,21 @@ def get_hdruk_activities_award_refs(workbook):
     return hdruk_activities_award_refs_dict
 
 
+def get_year_2018_group_award_refs(workbook):
+
+    year_2018_group_award_refs_dict = {'2018': []}
+
+    awards_df = workbook['Awards']
+    awards_df = awards_df.sort_values(by=['File Reference'])
+
+    for ref in awards_df['File Reference']:
+        year_2018_group_award_refs_dict['2018'].append(ref)
+
+    index = 0
+
+    return year_2018_group_award_refs_dict
+
+
 def export_dict_as_json(dict, file_path):
     
     with open(file_path, 'w') as fp:
@@ -90,15 +105,23 @@ def export_dict_as_json(dict, file_path):
 
 def main():
 
-    rf_2019_wb = read_workbook(PATH_TO_RESEARCHFISH_2019_DATA)  
+    # Read ReasearchFish data
+    rf_2018_wb = read_workbook(PATH_TO_RESEARCHFISH_2018_DATA)
+    rf_2019_wb = read_workbook(PATH_TO_RESEARCHFISH_2019_DATA)
 
+    # Get all 2018 award references
+    # TO DO: This data needs to be tagged by group
+    year_2018_group_award_refs_dict = get_year_2018_group_award_refs(rf_2018_wb)
+    export_dict_as_json(year_2018_group_award_refs_dict, 'hdruk_groups/year_2018_group_award_refs.json')
+
+    # Get 2019 award references by group
     community_group_award_refs_dict = get_community_group_award_refs(rf_2019_wb)
     national_priorities_award_refs_dict = get_national_priority_groups(rf_2019_wb)
     hdruk_activities_award_refs_dict = get_hdruk_activities_award_refs(rf_2019_wb)
-
     export_dict_as_json(community_group_award_refs_dict, 'hdruk_groups/community_group_award_refs.json')
     export_dict_as_json(national_priorities_award_refs_dict, 'hdruk_groups/national_priority_group_award_refs.json')
     export_dict_as_json(hdruk_activities_award_refs_dict, 'hdruk_groups/hdruk_activities_award_refs.json')
+
 
 
 if '__main__' == __name__:
