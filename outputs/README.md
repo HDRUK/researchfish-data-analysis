@@ -16,4 +16,4 @@
 
 ### 2019
 
-- [HDR UK Primary Audience for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20National%20Priority.png)
+- [HDR UK Primary Audience for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20National%20priority.png)
