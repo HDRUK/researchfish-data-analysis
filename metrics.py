@@ -2,8 +2,10 @@ from hdruk_groups import *
 import plotly.express as px
 import plotly
 
-
-PATH_TO_NP_AWARD_REFS = 'hdruk_groups/national_priority_group_award_refs.json'
+PATH_TO_RF_2018_AWARD_REFS = 'hdruk_groups/year_2018_group_award_refs.json'
+PATH_TO_NP_2019_AWARD_REFS = 'hdruk_groups/national_priority_group_award_refs.json'
+PATH_TO_COMM_2019_AWARD_REFS = 'hdruk_groups/community_group_award_refs.json'
+PATH_TO_ACT_2019_AWARD_REFS = 'hdruk_groups/hdruk_activities_award_refs.json'
 
 
 def read_json(path_to_json):
@@ -14,36 +16,66 @@ def read_json(path_to_json):
     return data_dict
 
 
-def get_international_collaborations(workbook, award_refs_dict):
-    
-    collaborations_df = workbook['Collaborations']
+class international_collaborations(object):
+    def collaborations_2018(workbook, award_refs_dict, filename_out):
+        
+        collaborations_df = workbook['Collaborations']
 
-    collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
+        collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
 
-    for key in award_refs_dict:
-        value = award_refs_dict[key][0]        
-        collaborations_filtered_df = collaborations_filtered_df.append(
-            collaborations_df.loc[collaborations_df['Award Reference'] == value])
+        for key in award_refs_dict:
+            for value in award_refs_dict[key]:
+                collaborations_filtered_df = collaborations_filtered_df.append(
+                    collaborations_df.loc[collaborations_df['File Reference'] == value])
 
-    np_country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
+        np_country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
 
-    for key in np_country_counts:
-        np_country_counts[key] = [np_country_counts[key]]
+        for key in np_country_counts:
+            np_country_counts[key] = [np_country_counts[key]]
 
-    gapminder = px.data.gapminder().query("year == 2007")
+        gapminder = px.data.gapminder().query("year == 2007")
 
-    np_country_counts_df = pd.DataFrame(np_country_counts).T.reset_index()
-    np_country_counts_df.columns=['country', 'count']
+        np_country_counts_df = pd.DataFrame(np_country_counts).T.reset_index()
+        np_country_counts_df.columns=['country', 'count']
 
-    df=pd.merge(gapminder, np_country_counts_df, how='left', on='country')
+        df=pd.merge(gapminder, np_country_counts_df, how='left', on='country')
 
-    fig = px.choropleth(df, locations="iso_alpha",
-                        color="count", 
-                        hover_name="country", # adding hover information
-                        color_continuous_scale=px.colors.sequential.Plasma)
+        fig = px.choropleth(df, locations="iso_alpha",
+                            color="count", 
+                            hover_name="country", # adding hover information
+                            color_continuous_scale=px.colors.sequential.Plasma)    
+        
+        plotly.offline.plot(fig, filename='outputs/{}.html'.format(filename_out))
 
-    
-    plotly.offline.plot(fig, filename='outputs/national_priority_international_colabs.html')
+    def collaborations_2019(workbook, award_refs_dict, filename_out):
+        
+        collaborations_df = workbook['Collaborations']
+
+        collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
+
+        for key in award_refs_dict:
+            for value in award_refs_dict[key]:       
+                collaborations_filtered_df = collaborations_filtered_df.append(
+                    collaborations_df.loc[collaborations_df['Award Reference'] == value])
+
+        np_country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
+
+        for key in np_country_counts:
+            np_country_counts[key] = [np_country_counts[key]]
+
+        gapminder = px.data.gapminder().query("year == 2007")
+
+        np_country_counts_df = pd.DataFrame(np_country_counts).T.reset_index()
+        np_country_counts_df.columns=['country', 'count']
+
+        df=pd.merge(gapminder, np_country_counts_df, how='left', on='country')
+
+        fig = px.choropleth(df, locations="iso_alpha",
+                            color="count", 
+                            hover_name="country", # adding hover information
+                            color_continuous_scale=px.colors.sequential.Plasma)    
+        
+        plotly.offline.plot(fig, filename='outputs/{}.html'.format(filename_out))
 
 
 class uk_collaborations(object):
@@ -94,16 +126,24 @@ class uk_collaborations(object):
 
 def main():
 
-    np_award_refs_dict = read_json(PATH_TO_NP_AWARD_REFS)
+    rfish_2018_award_refs_dict = read_json(PATH_TO_RF_2018_AWARD_REFS)
+    np_2019_award_refs_dict = read_json(PATH_TO_NP_2019_AWARD_REFS)
+    comm_2019_award_refs_dict = read_json(PATH_TO_COMM_2019_AWARD_REFS)
+    act_2019_award_refs_dict = read_json(PATH_TO_ACT_2019_AWARD_REFS)
+
+    rf_2018_wb = read_workbook(PATH_TO_RESEARCHFISH_2018_DATA)
     rf_2019_wb = read_workbook(PATH_TO_RESEARCHFISH_2019_DATA)
 
     # Getting national priority international collaborations
-    get_international_collaborations(rf_2019_wb, np_award_refs_dict)
+    international_collaborations.collaborations_2018(rf_2018_wb, rfish_2018_award_refs_dict, 'researchfish_2018_international_colabs')
+    international_collaborations.collaborations_2019(rf_2019_wb, np_2019_award_refs_dict, 'national_priority_2019_international_colabs')
+    international_collaborations.collaborations_2019(rf_2019_wb, comm_2019_award_refs_dict, 'community_group_2019_international_colabs')
+    international_collaborations.collaborations_2019(rf_2019_wb, act_2019_award_refs_dict, 'hdruk_activity_2019_international_colabs')
 
     # Getting national priority UK-wide collaborations
-    np_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb)
-    np_uk_region_counts_df = uk_collaborations.add_region_area_codes(np_uk_region_counts_dict)
-    np_uk_region_counts_df.to_csv('outputs/np_uk_region_colab_counts.csv', index=False)
+    np_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb)
+    np_2019_uk_region_counts_df = uk_collaborations.add_region_area_codes(np_uk_region_counts_dict)
+    np_2019_uk_region_counts_df.to_csv('outputs/np_uk_region_colab_counts.csv', index=False)
 
 
 
