@@ -28,24 +28,25 @@ class international_collaborations(object):
                 collaborations_filtered_df = collaborations_filtered_df.append(
                     collaborations_df.loc[collaborations_df['File Reference'] == value])
 
-        np_country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
+        country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
 
-        for key in np_country_counts:
-            np_country_counts[key] = [np_country_counts[key]]
+        for key in country_counts:
+            country_counts[key] = [country_counts[key]]
 
         gapminder = px.data.gapminder().query("year == 2007")
 
-        np_country_counts_df = pd.DataFrame(np_country_counts).T.reset_index()
-        np_country_counts_df.columns=['country', 'count']
+        country_counts_df = pd.DataFrame(country_counts).T.reset_index()
+        country_counts_df.columns=['country', 'count']
 
-        df=pd.merge(gapminder, np_country_counts_df, how='left', on='country')
+        df=pd.merge(gapminder, country_counts_df, how='left', on='country')
 
         fig = px.choropleth(df, locations="iso_alpha",
                             color="count", 
                             hover_name="country", # adding hover information
                             color_continuous_scale=px.colors.sequential.Plasma)    
         
-        plotly.offline.plot(fig, filename='outputs/{}.html'.format(filename_out))
+        # Plot for all award refs in HDR UK group
+        plotly.offline.plot(fig, filename='outputs/international_collabs/{}.html'.format(filename_out))
 
     def collaborations_2019(workbook, award_refs_dict, filename_out):
         
@@ -58,24 +59,66 @@ class international_collaborations(object):
                 collaborations_filtered_df = collaborations_filtered_df.append(
                     collaborations_df.loc[collaborations_df['Award Reference'] == value])
 
-        np_country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
+        country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
 
-        for key in np_country_counts:
-            np_country_counts[key] = [np_country_counts[key]]
+        # print(country_counts)
+
+        for key in country_counts:
+            country_counts[key] = [country_counts[key]]
+
+        # print(country_counts)
 
         gapminder = px.data.gapminder().query("year == 2007")
 
-        np_country_counts_df = pd.DataFrame(np_country_counts).T.reset_index()
-        np_country_counts_df.columns=['country', 'count']
+        country_counts_df = pd.DataFrame(country_counts).T.reset_index()
+        country_counts_df.columns=['country', 'count']
 
-        df=pd.merge(gapminder, np_country_counts_df, how='left', on='country')
+        df=pd.merge(gapminder, country_counts_df, how='left', on='country')
 
         fig = px.choropleth(df, locations="iso_alpha",
                             color="count", 
                             hover_name="country", # adding hover information
-                            color_continuous_scale=px.colors.sequential.Plasma)    
+                            color_continuous_scale=px.colors.sequential.Plasma)
         
-        plotly.offline.plot(fig, filename='outputs/{}.html'.format(filename_out))
+        # Plot for all award refs in HDR UK group
+        plotly.offline.plot(fig, filename='outputs/international_collabs/{}.html'.format(filename_out))
+
+        country_counts_each_group = list(award_refs_dict.keys())
+
+        count = 0
+        for group in country_counts_each_group:
+            group_refs = award_refs_dict[group]
+            group_df = pd.DataFrame(columns = collaborations_df.columns)
+            for ref in group_refs:
+                group_df = group_df.append(collaborations_df.loc[collaborations_df['Award Reference'] == ref])
+            
+            country_counts_each_group[count] = [country_counts_each_group[count], group_df]
+
+            count+=1
+
+        for group in country_counts_each_group:
+
+            group.append(group[1]['Country'].value_counts().to_dict())
+
+            if group[2] == {}:
+                pass
+            else:
+                for key in group[2]:
+                    group[2][key] = [group[2][key]]
+
+                gapminder = px.data.gapminder().query("year == 2007")
+
+                group_country_counts_df = pd.DataFrame(group[2]).T.reset_index()
+                group_country_counts_df.columns=['country', 'count']
+
+                group_df=pd.merge(gapminder, group_country_counts_df, how='left', on='country')
+
+                fig = px.choropleth(group_df, locations="iso_alpha",
+                                    color="count", 
+                                    hover_name="country", # adding hover information
+                                    color_continuous_scale=px.colors.sequential.Plasma)
+
+                plotly.offline.plot(fig, filename='outputs/international_collabs/{}_2019.html'.format(group[0]))
 
 
 class uk_collaborations(object):
@@ -140,7 +183,7 @@ def main():
     international_collaborations.collaborations_2019(rf_2019_wb, comm_2019_award_refs_dict, 'community_group_2019_international_colabs')
     international_collaborations.collaborations_2019(rf_2019_wb, act_2019_award_refs_dict, 'hdruk_activity_2019_international_colabs')
 
-    # Getting national priority UK-wide collaborations
+    # # Getting national priority UK-wide collaborations
     np_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb)
     np_2019_uk_region_counts_df = uk_collaborations.add_region_area_codes(np_uk_region_counts_dict)
     np_2019_uk_region_counts_df.to_csv('outputs/np_uk_region_colab_counts.csv', index=False)
