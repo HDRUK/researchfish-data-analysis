@@ -29,6 +29,7 @@ class international_collaborations(object):
                     collaborations_df.loc[collaborations_df['File Reference'] == value])
 
         country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
+        country_counts.pop('United Kingdom', None) # Remove United Kingdom from plot
 
         for key in country_counts:
             country_counts[key] = [country_counts[key]]
@@ -50,6 +51,10 @@ class international_collaborations(object):
 
     def collaborations_2019(workbook, award_refs_dict, filename_out):
         
+        '''
+        PLOT FOR ENTIRE GROUP TYPE
+        '''
+
         collaborations_df = workbook['Collaborations']
 
         collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
@@ -60,13 +65,10 @@ class international_collaborations(object):
                     collaborations_df.loc[collaborations_df['Award Reference'] == value])
 
         country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
-
-        # print(country_counts)
+        country_counts.pop('United Kingdom', None) # Remove United Kingdom from plot
 
         for key in country_counts:
             country_counts[key] = [country_counts[key]]
-
-        # print(country_counts)
 
         gapminder = px.data.gapminder().query("year == 2007")
 
@@ -83,6 +85,10 @@ class international_collaborations(object):
         # Plot for all award refs in HDR UK group
         plotly.offline.plot(fig, filename='outputs/international_collabs/{}.html'.format(filename_out))
 
+
+        '''
+        PLOT FOR SUBGROUPS IN GROUP TYPES
+        '''
         country_counts_each_group = list(award_refs_dict.keys())
 
         count = 0
@@ -99,6 +105,7 @@ class international_collaborations(object):
         for group in country_counts_each_group:
 
             group.append(group[1]['Country'].value_counts().to_dict())
+            group[2].pop('United Kingdom', None) # Remove United Kingdom from plot
 
             if group[2] == {}:
                 pass
@@ -184,9 +191,9 @@ def main():
     international_collaborations.collaborations_2019(rf_2019_wb, act_2019_award_refs_dict, 'hdruk_activity_2019_international_colabs')
 
     # # Getting national priority UK-wide collaborations
-    np_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb)
-    np_2019_uk_region_counts_df = uk_collaborations.add_region_area_codes(np_uk_region_counts_dict)
-    np_2019_uk_region_counts_df.to_csv('outputs/np_uk_region_colab_counts.csv', index=False)
+    # np_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb)
+    # np_2019_uk_region_counts_df = uk_collaborations.add_region_area_codes(np_uk_region_counts_dict)
+    # np_2019_uk_region_counts_df.to_csv('outputs/np_uk_region_colab_counts.csv', index=False)
 
 
 
