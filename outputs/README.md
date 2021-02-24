@@ -4,7 +4,7 @@
 
 ### 2018
 
-- [All 2018 International Collaborations](https://htmlpreview.github.io/?https://github.com/HDRUK/researchfish-data-analysis/blob/main/outputs/researchfish_2018_international_colabs.html)
+- [All 2018 International Collaborations](https://htmlpreview.github.io/?https://github.com/HDRUK/researchfish-data-analysis/blob/main/outputs/international_collabs/researchfish_2018_international_colabs.html)
 
 ### 2019
 
