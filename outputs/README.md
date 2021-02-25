@@ -29,7 +29,7 @@
 - [HDR UK Primary Audience for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20National%20priority.png)
 - [HDR UK Primary Audience for Activities](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20HDRUK%20Activities.png)
 - [HDR UK other audiences for all National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Other%20audiences%20for%20all%20national%20priority.png)
-- [HDR UK other audiences for all National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20Community%20Groups.png)
+- [Primary Audience for Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Primary%20Audience%20for%20Community%20Groups.png)
 
 #### Geographical Reach
 
