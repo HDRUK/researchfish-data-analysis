@@ -1,5 +1,13 @@
 # Outputs
 
+## UK-wide Collaborations
+
+### 2019
+
+- [HDR UK National Priority Groups](https://app.powerbi.com/view?r=eyJrIjoiOTE2YzY2OWYtZGRiMC00NTJiLWJkODItN2U1MGM1M2FmZmJlIiwidCI6Ijg0NGNhY2IxLTcwMjctNDI2My05ZDhhLTE4ZmFhNWJmMDgzOSJ9)
+- [HDR UK Community Groups](https://app.powerbi.com/view?r=eyJrIjoiODU1NjU1ODEtMDFjNy00NWI3LWFhOTQtNDY5YTFlNDQ2OTcxIiwidCI6Ijg0NGNhY2IxLTcwMjctNDI2My05ZDhhLTE4ZmFhNWJmMDgzOSJ9)
+- [HDR UK Activity Groups](https://app.powerbi.com/view?r=eyJrIjoiM2Y0Nzc3ZjItMDA2Mi00OTU3LWFiMTEtZDA2N2IxMWExMTdhIiwidCI6Ijg0NGNhY2IxLTcwMjctNDI2My05ZDhhLTE4ZmFhNWJmMDgzOSJ9)
+
 ## International Collaborations
 
 ### 2018
