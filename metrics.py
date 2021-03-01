@@ -1,6 +1,7 @@
 from hdruk_groups import *
 import plotly.express as px
 import plotly
+import matplotlib.pyplot as plt
 
 PATH_TO_RF_2018_AWARD_REFS = 'hdruk_groups/year_2018_group_award_refs.json'
 PATH_TO_NP_2019_AWARD_REFS = 'hdruk_groups/national_priority_group_award_refs.json'
@@ -16,6 +17,46 @@ def read_json(path_to_json):
     return data_dict
 
 
+def bar_plot(dataframe, x_label, y_lable, x_tick, filepath):
+    ax = dataframe.plot.bar(figsize = (24, 10), width=0.8, rot = 6)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_lable)
+    ax.set_xticklabels(x_tick)
+    # plt.show()
+    ax.figure.savefig(filepath)
+
+
+def collaborations_impact(workbook, award_refs_dict, filepath):
+
+    collaborations_df = workbook['Collaborations']
+
+    subgroups_each_group = list(award_refs_dict.keys())
+
+    count=0
+    for key in award_refs_dict:
+        group_refs = award_refs_dict[key]
+        group_df = collaborations_df[collaborations_df['Award Reference'].isin(group_refs)]
+                    
+        subgroups_each_group[count] = [subgroups_each_group[count], group_df]
+
+        subgroups_each_group[count][1]['Group'] = subgroups_each_group[count][0]
+
+        count += 1
+
+    list_dfs = [df[1] for df in subgroups_each_group]
+    
+    df_subgroups_impact = pd.concat(list_dfs)
+
+    aggregated_subgroup_df = df_subgroups_impact.groupby('Group').agg({'Cultural Impact': ['sum'], 'Societal Impact': ['sum'], 'Economic Impact': ['sum'], 
+    'Policy & Public Service Impact': ['sum'], 'No Impact Yet': ['sum']})
+
+    aggregated_subgroup_df.columns = aggregated_subgroup_df.columns.droplevel(1)
+    aggregated_subgroup_df = aggregated_subgroup_df.T.reset_index()
+    aggregated_subgroup_df = aggregated_subgroup_df.rename(columns={'index': 'Group'})
+
+    bar_plot(aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath)
+
+
 class international_collaborations(object):
     def collaborations_2018(workbook, award_refs_dict, filename_out):
         
@@ -24,9 +65,11 @@ class international_collaborations(object):
         collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
 
         for key in award_refs_dict:
-            for value in award_refs_dict[key]:
-                collaborations_filtered_df = collaborations_filtered_df.append(
-                    collaborations_df.loc[collaborations_df['File Reference'] == value])
+            # for value in award_refs_dict[key]:
+            #     collaborations_filtered_df = collaborations_filtered_df.append(
+            #         collaborations_df.loc[collaborations_df['File Reference'] == value])
+            group_refs = award_refs_dict[key]
+            collaborations_filtered_df = collaborations_df[collaborations_df['File Reference'].isin(group_refs)]
 
         country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
         country_counts.pop('United Kingdom', None) # Remove United Kingdom from plot
@@ -47,7 +90,7 @@ class international_collaborations(object):
                             color_continuous_scale=px.colors.sequential.Plasma)    
         
         # Plot for all award refs in HDR UK group
-        plotly.offline.plot(fig, filename='outputs/international_collabs/{}.html'.format(filename_out))
+        plotly.offline.plot(fig, filename='outputs/collaborations/international_collabs/{}.html'.format(filename_out))
 
     def collaborations_2019(workbook, award_refs_dict, filename_out):
         
@@ -60,9 +103,11 @@ class international_collaborations(object):
         collaborations_filtered_df = pd.DataFrame(columns = collaborations_df.columns)
 
         for key in award_refs_dict:
-            for value in award_refs_dict[key]:       
-                collaborations_filtered_df = collaborations_filtered_df.append(
-                    collaborations_df.loc[collaborations_df['Award Reference'] == value])
+            # for value in award_refs_dict[key]:       
+            #     collaborations_filtered_df = collaborations_filtered_df.append(
+            #         collaborations_df.loc[collaborations_df['Award Reference'] == value])
+            group_refs = award_refs_dict[key]
+            collaborations_filtered_df = collaborations_df[collaborations_df['Award Reference'].isin(group_refs)]
 
         country_counts = collaborations_filtered_df['Country'].value_counts().to_dict()
         country_counts.pop('United Kingdom', None) # Remove United Kingdom from plot
@@ -83,7 +128,7 @@ class international_collaborations(object):
                             color_continuous_scale=px.colors.sequential.Plasma)
         
         # Plot for all award refs in HDR UK group
-        plotly.offline.plot(fig, filename='outputs/international_collabs/{}.html'.format(filename_out))
+        plotly.offline.plot(fig, filename='outputs/collaborations/international_collabs/{}.html'.format(filename_out))
 
 
         '''
@@ -125,10 +170,10 @@ class international_collaborations(object):
                                     hover_name="country", # adding hover information
                                     color_continuous_scale=px.colors.sequential.Plasma)
 
-                plotly.offline.plot(fig, filename='outputs/international_collabs/{}_2019.html'.format(group[0]))
+                plotly.offline.plot(fig, filename='outputs/collaborations/international_collabs/{}_2019.html'.format(group[0]))
 
 
-class uk_collaborations(object):
+class uk_collaborations_2019(object):
     def get_region_counts(workbook, award_refs_dict):
 
         collaborations_df = workbook['Collaborations']
@@ -191,9 +236,10 @@ class uk_collaborations(object):
 
         return uk_region_counts_each_group
 
+
 def list_group_dataframe_pairs_to_csv(uk_region_counts_dfs):
     for group in uk_region_counts_dfs:
-        group[1].to_csv('outputs/uk_collabs/{}_uk_region_colab_counts.csv'.format(group[0]), index=False)
+        group[1].to_csv('outputs/collaborations/uk_collabs/{}_uk_region_colab_counts.csv'.format(group[0]), index=False)
 
 
 def main():
@@ -213,18 +259,22 @@ def main():
     international_collaborations.collaborations_2019(rf_2019_wb, act_2019_award_refs_dict, 'hdruk_activity_2019_international_colabs')
 
     # Getting 2019 UK-wide collaborations
-    np_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb, np_2019_award_refs_dict)
-    np_2019_uk_region_counts_dfs = uk_collaborations.add_region_area_codes(np_2019_uk_region_counts_dict)
+    np_2019_uk_region_counts_dict = uk_collaborations_2019.get_region_counts(rf_2019_wb, np_2019_award_refs_dict)
+    np_2019_uk_region_counts_dfs = uk_collaborations_2019.add_region_area_codes(np_2019_uk_region_counts_dict)
+    comm_2019_uk_region_counts_dict = uk_collaborations_2019.get_region_counts(rf_2019_wb, comm_2019_award_refs_dict)
+    comm_2019_uk_region_counts_dfs = uk_collaborations_2019.add_region_area_codes(comm_2019_uk_region_counts_dict)
+    act_2019_uk_region_counts_dict = uk_collaborations_2019.get_region_counts(rf_2019_wb, act_2019_award_refs_dict)
+    act_2019_uk_region_counts_dfs = uk_collaborations_2019.add_region_area_codes(act_2019_uk_region_counts_dict)
+
     list_group_dataframe_pairs_to_csv(np_2019_uk_region_counts_dfs)
-
-    comm_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb, comm_2019_award_refs_dict)
-    comm_2019_uk_region_counts_dfs = uk_collaborations.add_region_area_codes(comm_2019_uk_region_counts_dict)
     list_group_dataframe_pairs_to_csv(comm_2019_uk_region_counts_dfs)
-
-    act_2019_uk_region_counts_dict = uk_collaborations.get_region_counts(rf_2019_wb, act_2019_award_refs_dict)
-    act_2019_uk_region_counts_dfs = uk_collaborations.add_region_area_codes(act_2019_uk_region_counts_dict)
     list_group_dataframe_pairs_to_csv(act_2019_uk_region_counts_dfs)
 
+
+    # Getting impact of collaborations
+    collaborations_impact(rf_2019_wb, np_2019_award_refs_dict, 'outputs/collaborations/np_collaborations_impact.png')
+    collaborations_impact(rf_2019_wb, comm_2019_award_refs_dict, 'outputs/collaborations/comm_collaborations_impact.png')
+    collaborations_impact(rf_2019_wb, act_2019_award_refs_dict, 'outputs/collaborations/hdr_act_collaborations_impact.png')
 
 
 if '__main__' == __name__:
