@@ -48,6 +48,7 @@
 
 ### Other Audiences
 - [Other audiences for all National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Other%20audiences%20for%20all%20national%20priority.png)
+- [Other audiences for HDRUK Activities Group](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Other%20Audiences%20of%20HDRUK%20Activities%20Group.png)
 
 #### Geographical Reach
 
