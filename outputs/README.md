@@ -51,6 +51,8 @@
 
 #### Geographical Reach
 
-- [HDR UK Geographical Reach for each National Priority[UPDATED]](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20reach%20for%20National%20priority.png)
+- [Geographical Reach for each National Priority[UPDATED]](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20reach%20for%20National%20priority.png)
+- [Geographical Reach for each Activities Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
+- [Geographical Reach for each Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
 
 
