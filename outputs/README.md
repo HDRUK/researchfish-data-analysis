@@ -4,9 +4,12 @@
 
 ### 2019
 
-- [HDR UK National Priority Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/np_collaborations_impact.png)
-- [HDR UK Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/comm_collaborations_impact.png)
-- [HDR UK Activity Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/hdr_act_collaborations_impact.png)
+- [HDR UK National Priority Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/all_np_collaborations_impact.png)
+  - [Group Breakdown](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/np_collaborations_impact.png)
+- [HDR UK Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/all_comm_collaborations_impact.png)
+  - [Group Breakdown](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/comm_collaborations_impact.png)
+- [HDR UK Activity Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/all_hdr_act_collaborations_impact.png)
+  - [Group Breakdown](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/collaborations/hdr_act_collaborations_impact.png)
 
 ## UK-wide Collaborations
 
