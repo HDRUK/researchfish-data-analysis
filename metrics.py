@@ -26,7 +26,7 @@ def bar_plot(dataframe, x_label, y_lable, x_tick, filepath):
     ax.figure.savefig(filepath)
 
 
-def collaborations_impact(workbook, award_refs_dict, filepath):
+def collaborations_impact(workbook, award_refs_dict, filepath1, filepath2):
 
     collaborations_df = workbook['Collaborations']
 
@@ -50,11 +50,17 @@ def collaborations_impact(workbook, award_refs_dict, filepath):
     aggregated_subgroup_df = df_subgroups_impact.groupby('Group').agg({'Cultural Impact': ['sum'], 'Societal Impact': ['sum'], 'Economic Impact': ['sum'], 
     'Policy & Public Service Impact': ['sum'], 'No Impact Yet': ['sum']})
 
+    combined_aggregated_subgroup_df = df_subgroups_impact[['Cultural Impact', 'Societal Impact', 'Economic Impact', 'Policy & Public Service Impact', 'No Impact Yet']]
+    
     aggregated_subgroup_df.columns = aggregated_subgroup_df.columns.droplevel(1)
     aggregated_subgroup_df = aggregated_subgroup_df.T.reset_index()
     aggregated_subgroup_df = aggregated_subgroup_df.rename(columns={'index': 'Group'})
 
-    bar_plot(aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath)
+    combined_aggregated_subgroup_df = combined_aggregated_subgroup_df.agg("sum", axis="rows")
+
+    bar_plot(aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath1)
+
+    bar_plot(combined_aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath2)
 
 
 class international_collaborations(object):
@@ -257,8 +263,6 @@ def list_group_dataframe_pairs_to_csv(uk_region_counts_dfs, group_name):
 
 
 
-
-
 def main():
 
     rfish_2018_award_refs_dict = read_json(PATH_TO_RF_2018_AWARD_REFS)
@@ -288,9 +292,12 @@ def main():
     list_group_dataframe_pairs_to_csv(act_2019_uk_region_counts_dfs, 'HDR_Activity_Groups')
 
     # Getting impact of collaborations
-    collaborations_impact(rf_2019_wb, np_2019_award_refs_dict, 'outputs/collaborations/np_collaborations_impact.png')
-    collaborations_impact(rf_2019_wb, comm_2019_award_refs_dict, 'outputs/collaborations/comm_collaborations_impact.png')
-    collaborations_impact(rf_2019_wb, act_2019_award_refs_dict, 'outputs/collaborations/hdr_act_collaborations_impact.png')
+    collaborations_impact(rf_2019_wb, np_2019_award_refs_dict, 'outputs/collaborations/np_collaborations_impact.png',
+    'outputs/collaborations/all_np_collaborations_impact.png')
+    collaborations_impact(rf_2019_wb, comm_2019_award_refs_dict, 'outputs/collaborations/comm_collaborations_impact.png',
+    'outputs/collaborations/all_comm_collaborations_impact.png')
+    collaborations_impact(rf_2019_wb, act_2019_award_refs_dict, 'outputs/collaborations/hdr_act_collaborations_impact.png',
+    'outputs/collaborations/all_hdr_act_collaborations_impact.png')
 
 
 if '__main__' == __name__:
