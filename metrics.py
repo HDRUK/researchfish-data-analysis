@@ -237,9 +237,26 @@ class uk_collaborations_2019(object):
         return uk_region_counts_each_group
 
 
-def list_group_dataframe_pairs_to_csv(uk_region_counts_dfs):
+def list_group_dataframe_pairs_to_csv(uk_region_counts_dfs, group_name):
     for group in uk_region_counts_dfs:
         group[1].to_csv('outputs/collaborations/uk_collabs/{}_uk_region_colab_counts.csv'.format(group[0]), index=False)
+
+    col_headings = list(uk_region_counts_dfs[0][1].columns.values)
+
+    count = 0
+    for group in uk_region_counts_dfs:
+        if count == 0:
+            combined_df = group[1]
+        else:
+            combined_df = combined_df.append(group[1])
+        count += 1
+
+    combined_df = combined_df.groupby(["Region", "Area Code"])
+
+    combined_df.sum().reset_index().to_csv('outputs/collaborations/uk_collabs/{}_uk_region_colab_counts.csv'.format(group_name), index=False)
+
+
+
 
 
 def main():
@@ -266,10 +283,9 @@ def main():
     act_2019_uk_region_counts_dict = uk_collaborations_2019.get_region_counts(rf_2019_wb, act_2019_award_refs_dict)
     act_2019_uk_region_counts_dfs = uk_collaborations_2019.add_region_area_codes(act_2019_uk_region_counts_dict)
 
-    list_group_dataframe_pairs_to_csv(np_2019_uk_region_counts_dfs)
-    list_group_dataframe_pairs_to_csv(comm_2019_uk_region_counts_dfs)
-    list_group_dataframe_pairs_to_csv(act_2019_uk_region_counts_dfs)
-
+    list_group_dataframe_pairs_to_csv(np_2019_uk_region_counts_dfs, 'National_Priorities')
+    list_group_dataframe_pairs_to_csv(comm_2019_uk_region_counts_dfs, 'Community_Groups')
+    list_group_dataframe_pairs_to_csv(act_2019_uk_region_counts_dfs, 'HDR_Activity_Groups')
 
     # Getting impact of collaborations
     collaborations_impact(rf_2019_wb, np_2019_award_refs_dict, 'outputs/collaborations/np_collaborations_impact.png')
