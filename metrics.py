@@ -56,11 +56,21 @@ def collaborations_impact(workbook, award_refs_dict, filepath1, filepath2):
     aggregated_subgroup_df = aggregated_subgroup_df.T.reset_index()
     aggregated_subgroup_df = aggregated_subgroup_df.rename(columns={'index': 'Group'})
 
+    agg_cols = aggregated_subgroup_df.columns.tolist()
+    agg_cols.pop(0)
+
+    # Change values to percentage
+    aggregated_subgroup_df[agg_cols] = aggregated_subgroup_df[agg_cols].div(aggregated_subgroup_df[agg_cols].sum().sum(), axis=0).multiply(100)
+    
     combined_aggregated_subgroup_df = combined_aggregated_subgroup_df.agg("sum", axis="rows")
+    combined_agg_subgroup_df = combined_aggregated_subgroup_df.to_frame().reset_index()
+    combined_agg_subgroup_df.columns = ['Group', 'National Priorities']
 
-    bar_plot(aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath1)
+    # Change values to percentage
+    combined_agg_subgroup_df[['National Priorities']] = combined_agg_subgroup_df[['National Priorities']].div(combined_agg_subgroup_df[['National Priorities']].sum().sum(), axis=0).multiply(100)
 
-    bar_plot(combined_aggregated_subgroup_df, "Impact Type", "Count", aggregated_subgroup_df['Group'], filepath2)
+    bar_plot(aggregated_subgroup_df, "Impact Type", "Percentage", aggregated_subgroup_df['Group'], filepath1)
+    bar_plot(combined_agg_subgroup_df, "Impact Type", "Percentage", aggregated_subgroup_df['Group'], filepath2)
 
 
 class international_collaborations(object):
