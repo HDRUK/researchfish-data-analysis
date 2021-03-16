@@ -56,8 +56,10 @@
 
 #### Geographical Reach
 
-- [Geographical Reach for each National Priority [UPDATED]](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20reach%20for%20National%20priority.png)
-- [Geographical Reach for each Activities Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
+- [Overall Geographical Reach for National Priority Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Distribution%20for%20National%20Priority%20Groups_Single%20Pie%20Chart.png)
+  - [Geographical Reach for each National Priority [in separate Pie Chart]](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20reach%20for%20National%20priority.png)
+- [Overall Geographical Reach for HDRUK Activities Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Distribution%20for%20HDRUK%20Activities%20Groups.png)
+  - [Geographical Reach for each Activities Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
 - [Geographical Reach for each Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
 
 
