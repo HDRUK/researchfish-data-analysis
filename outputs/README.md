@@ -62,4 +62,8 @@
   - [Geographical Reach for each Activities Groups [in separate Pie Chart]](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
 - [Geographical Reach for each Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Geographical%20Reach%20for%20Activities%20Group.png)
 
+## HDRUK Impact
+- [Impact of HDRUK research for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDRUK%20research%20for%20NP.png)
+- [Impact of HDRUK research for Activities Group](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDRUK%20research%20for%20Activities%20Group.png)
+
 
