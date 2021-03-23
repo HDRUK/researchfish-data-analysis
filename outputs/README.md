@@ -69,6 +69,8 @@
 - [Impact of HDRUK research for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDR%20UK%20research%20for%20National%20Priority%20Group.png)
 - [Impact of HDRUK research for Activities Group](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDR%20UK%20research%20for%20HDRUK%20Activities%20Group.png)
 
+- [Example Stacked bar chart with Percentage](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Example%20Stacked%20Bar%20Chart.png)
+-
 - In a normal Bar chart
   - [Impact of HDRUK research for National Priority](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDRUK%20research%20for%20NP.png)
   - [Impact of HDRUK research for Activities Group](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDRUK%20research%20for%20Activities%20Group.png)
