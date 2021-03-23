@@ -3,6 +3,8 @@ import numpy as np
 import json
 import matplotlib.pyplot as plt
 from functools import reduce
+from impact import joined_df
+
 
 PATH_TO_NP_2019_AWARD_REFS = 'hdruk_groups/national_priority_group_award_refs.json'
 PATH_TO_COMM_2019_AWARD_REFS = 'hdruk_groups/community_group_award_refs.json'
@@ -34,6 +36,41 @@ def bar_plot(dataframe, x_label, y_lable, x_tick):
     plt.show()
     #ax.figure.savefig('outputs/Primary Audience for National priority.png')  # saves the current figure
 
+
+def stacked_bar_plot(dataframe, X, title, y_tick, y_label):
+    '''take a dataFrame name, x, title, y_yick and y lable'''
+    ax = dataframe.plot( x = X, 
+                        kind = 'barh', 
+                        stacked = True, 
+                        title = title, 
+                        mark_right = True,
+                        figsize=(20, 10))
+    ax.set_yticklabels(y_tick)
+    ax.set_xlabel('Percentage')
+    ax.set_ylabel(y_label)
+    plt.show()
+
+
+
+def stacked_bar_plot_percentage(dataframe, X, title, y_tick):
+    # plot a Stacked Bar Chart using matplotlib 
+    ax = dataframe.plot( x = X, 
+                            kind = 'barh', 
+                            stacked = True, 
+                            title = title, mark_right = True) 
+
+    df_total = dataframe["Policymakers"] + dataframe["Professional Practitioners"] + dataframe["General Public"] + dataframe["Patients, Cares, Patient Groups"]
+    df_rel = dataframe[dataframe.columns[1:]].div(df_total, 0)*100
+
+    for n in df_rel: 
+        for i, (cs, ab, pc) in enumerate(zip(dataframe.iloc[:, 1:].cumsum(1)[n],  
+                                        dataframe[n], df_rel[n])): 
+            plt.text(cs - ab / 2, i, str(np.round(pc, 1)) + '%', va = 'center', ha = 'center', rotation = 20, fontsize = 8)
+    ax.set_yticklabels(y_tick)
+    ax.set_xlabel('Percentage')
+    #ax.set_ylabel(y_label)
+    plt.show()
+  
 
 class engagement(object):
     def primary_audience_2019(workbook, award_refs_dict):
@@ -196,7 +233,69 @@ class engagement(object):
 
         #plottting dataframe
         bar_plot(merged_df, "Other Audiences for Groups", "Audience Count", labels)
+    
+    
+    def impact_of_hdruk_research(workbook, award_refs_dict, plt_tilte, labels):
+        '''takes workbook as main input, awards_refs_dict as dictionary, and labels is the label of the bar plot'''
+        ENGAGEMENT_SHEET_DF = workbook['Engagement']
 
+        engagement_df = pd.DataFrame(columns = ['Award Reference', 'Policymakers', 'Professional Practitioners', 'General Public',	'Patients, Cares, Patient Groups' ])
+
+        for key in award_refs_dict:
+            for value in award_refs_dict[key]:
+                engagement_df = engagement_df.append(ENGAGEMENT_SHEET_DF.loc[ENGAGEMENT_SHEET_DF['Award Reference'] == value])
+                engagement_df.reset_index(inplace =True, drop =True)
+
+        engagement_df = engagement_df.groupby("Award Reference").agg({'Policymakers':['sum'], 'Professional Practitioners':['sum'],'General Public':['sum'], 'Patients, Cares, Patient Groups':['sum']})
+        engagement_df.columns = engagement_df.columns.droplevel(1)
+        engagement_df['Award_Reference_1'] = engagement_df.index
+        engagement_df = engagement_df.reindex(['Award_Reference_1','Policymakers','Professional Practitioners', 'General Public', 'Patients, Cares, Patient Groups'], axis=1)
+        engagement_df.reset_index(drop=True, inplace=True)
+        
+        # plot a Stacked Bar Chart using matplotlib 
+        stacked_bar_plot_percentage(engagement_df, "Award_Reference_1", plt_tilte, labels)
+    
+    def impact_of_community_audience_2019(workbook, award_refs_dict, plt_tilte, labels):
+            ENGAGEMENT_DF = workbook['Engagement']
+
+            engagement_df = pd.DataFrame(columns = ['Award Reference', 'Policymakers', 'Professional Practitioners', 'General Public',	'Patients, Cares, Patient Groups'])
+
+            for key in award_refs_dict:
+                for value in award_refs_dict[key]:
+                    engagement_df = engagement_df.append(ENGAGEMENT_DF.loc[ENGAGEMENT_DF['Award Reference'] == value])
+                    engagemet = engagement_df[['Award Reference', 'Policymakers', 'Professional Practitioners', 'General Public',	'Patients, Cares, Patient Groups']]
+                    engagemet.reset_index(inplace =True, drop =True)
+            
+            national_p_group = list(award_refs_dict.keys())
+
+            count = 0
+            for group in national_p_group:
+                group_refs = award_refs_dict[group]
+                group_df = engagemet[engagemet['Award Reference'].isin(group_refs)]
+                national_p_group[count] = [national_p_group[count], group_df]
+                count += 1
+
+            # renaming 
+            for group in national_p_group:
+                group[1]['Award Reference'] = group[0]
+        
+            fellows_df, sprintET_df, university_rt_df  = national_p_group[0][1], national_p_group[1][1], national_p_group[2][1]
+
+            appl_fellows_df = fellows_df.groupby("Award Reference").agg({'Policymakers':['sum'], 'Professional Practitioners':['sum'],'General Public':['sum'], 'Patients, Cares, Patient Groups':['sum']})
+            appl_sprintET_df = sprintET_df.groupby("Award Reference").agg({'Policymakers':['sum'], 'Professional Practitioners':['sum'],'General Public':['sum'], 'Patients, Cares, Patient Groups':['sum']})
+            appl_university_rt_df = university_rt_df.groupby("Award Reference").agg({'Policymakers':['sum'], 'Professional Practitioners':['sum'],'General Public':['sum'], 'Patients, Cares, Patient Groups':['sum']})
+            
+            appl_fellows_df.columns = appl_fellows_df.columns.droplevel(1)
+            appl_sprintET_df.columns = appl_sprintET_df.columns.droplevel(1)
+            appl_university_rt_df.columns = appl_university_rt_df.columns.droplevel(1)
+            
+            # merging all DataFrames together
+            merged_df = pd.concat([appl_fellows_df, appl_sprintET_df, appl_university_rt_df])
+            merged_df['Award_Reference_1'] = merged_df.index
+            merged_df = merged_df.reindex(['Award_Reference_1','Policymakers','Professional Practitioners', 'General Public', 'Patients, Cares, Patient Groups'], axis=1)
+
+            # plot a Stacked Bar Chart using matplotlib 
+            stacked_bar_plot_percentage(merged_df, "Award_Reference_1", plt_tilte, labels)
 
 def main():
 
@@ -214,7 +313,7 @@ def main():
     # Primary Audience of Activities Group
     engagement.primary_audience_2019(rf_2019_wb, act_2019_award_refs_dict)
 
-    # Geographical Reach for National Priority
+    Geographical Reach for National Priority
     engagement.geographical_reach_2019(rf_2019_wb, np_2019_award_refs_dict, 'Geographical Reach for National Priority')
     # Geographical Reach for Activities
     engagement.geographical_reach_2019(rf_2019_wb, act_2019_award_refs_dict, 'Geographical Reach for Activities Group')
@@ -226,9 +325,10 @@ def main():
     engagement.other_audience_2019(rf_2019_wb, act_2019_award_refs_dict, ['HDRUK central infrastructure activities', 'HDRUK central PPPEI activities', 'HDRUK central training activities'])
     engagement.other_community_audience_2019(rf_2019_wb, comm_2019_award_refs_dict, ['Fellows', 'Sprint Exemplar Teams', 'University Research Teams'])
 
+    # Impact
+    engagement.impact_of_hdruk_research(rf_2019_wb, np_2019_award_refs_dict, 'Impact of HDRUK National Priority', ['Applied Analytics', 'Better Care', 'Human Phenome', 'Understanding Causes of Disease', 'Clinical Trials', 'Improving Public Health'])
+    engagement.impact_of_hdruk_research(rf_2019_wb, act_2019_award_refs_dict, 'Impact of HDRUK Activities Group', ['HDRUK central infrastructure activities', 'HDRUK central PPPEI activities', 'HDRUK central training activities'])
+    engagement.impact_of_community_audience_2019(rf_2019_wb, comm_2019_award_refs_dict, 'Impact of HDRUK Community Group', ['Central Infrastructure Activities', 'Central PPPEI Activities', 'Central Training Activities'])
 
 if '__main__' == __name__:
     main()
-    
-
-
