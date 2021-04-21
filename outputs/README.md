@@ -75,6 +75,6 @@
 - [Top 5 Collaborating Countries - Bar chart with times](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%205%20Collaborating%20Countries%20with%20times.png)
 - [Top 5 Collaborating Countries - Pie chart](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%205%20collaborated%20countries.png)
 - [Top Collaborated Research Organisation - Pie chart](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%20Collaborated%20Research%20Organisation.png)
-
+- [Top Collaborated Research Organisation - Bar chart](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%20Collaborating%20Research%20Organisation%20-Bar%20Chart.png)
 
 
