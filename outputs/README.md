@@ -70,3 +70,11 @@
 - [Impact of HDRUK research for Activities Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDR%20UK%20research%20for%20HDRUK%20Activities%20Group.png)
 - [Impact of HDRUK Community Groups](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Impact%20of%20HDRUK%20Community%20Groups.png)
 
+## How far HDR UK is acting nationally
+
+- [Top 5 Collaborating Countries - Bar chart with times](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%205%20Collaborating%20Countries%20with%20times.png)
+- [Top 5 Collaborating Countries - Pie chart](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%205%20collaborated%20countries.png)
+- [Top Collaborated Research Organisation - Pie chart](https://raw.githubusercontent.com/HDRUK/researchfish-data-analysis/main/outputs/Top%20Collaborated%20Research%20Organisation.png)
+
+
+
